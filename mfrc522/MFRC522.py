@@ -125,7 +125,10 @@ class MFRC522:
 
     serNum = []
 
-    def __init__(self, bus=0, device=0, spd=1000000, pin_mode=10, pin_rst=-1, debugLevel='WARNING'):
+    DEFAULT_RST_BCM = 25
+    DEFAULT_RST_BOARD = 22
+
+    def __init__(self, bus=0, device=0, spd=1000000, pin_mode=GPIO.BOARD, pin_rst=-1, debugLevel='WARNING'):
         self.spi = spidev.SpiDev()
         self.spi.open(bus, device)
         self.spi.max_speed_hz = spd
@@ -143,10 +146,13 @@ class MFRC522:
             pin_mode = gpioMode
             
         if pin_rst == -1:
-            if pin_mode == 11:
-                pin_rst = 15
+            if pin_mode == GPIO.BCM:
+                pin_rst = DEFAULT_RST_BCM
             else:
-                pin_rst = 22
+                pin_rst = DEFAULT_RST_BOARD
+        else:
+            if pin_mode != gpioMode:
+                raise ValueError("Pin mode doesn't match previously selected one")
             
         GPIO.setup(pin_rst, GPIO.OUT)
         GPIO.output(pin_rst, 1)
