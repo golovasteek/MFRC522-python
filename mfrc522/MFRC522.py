@@ -147,9 +147,9 @@ class MFRC522:
             
         if pin_rst == -1:
             if pin_mode == GPIO.BCM:
-                pin_rst = DEFAULT_RST_BCM
+                pin_rst = self.DEFAULT_RST_BCM
             else:
-                pin_rst = DEFAULT_RST_BOARD
+                pin_rst = self.DEFAULT_RST_BOARD
         else:
             if pin_mode != gpioMode:
                 raise ValueError("Pin mode doesn't match previously selected one")
